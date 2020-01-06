@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using T1904A.DelegateDemo;
 
 namespace T1904A
 {
@@ -13,6 +14,8 @@ namespace T1904A
         private string description;
         private List<string> gallery;
 
+        public event DemoDelegate ChangePrice;
+        
         public Product()
         {
             this.gallery = new List<string>();
@@ -44,7 +47,24 @@ namespace T1904A
         public double Price
         {
             get => price;
-            set => price = value;
+            set
+            {
+                if (value != price && price != 0)
+                {
+                    if (ChangePrice == null)
+                    {
+                        ChangePrice += Notification;
+                    }
+                    ChangePrice("Gia vua duoc thay doi: " + (value-price));
+                }
+
+                price = value;
+            } 
+        }
+
+        public static void Notification(string msg)
+        {
+            Console.WriteLine(msg);
         }
 
         public int Qty
